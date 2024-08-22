@@ -132,5 +132,42 @@ namespace CRUDTests
             }
         }
         #endregion
+
+
+
+
+        #region GetCountryByCountryID
+
+        [Fact]
+        public void GetCountryByCountryID_NullCountryID()
+        {
+            //Arrange
+            Guid? countryID = null;
+
+            //Act
+            CountryResponse? country_response_from_get_method = _countriesService.GetCountryByCountryID((Guid)countryID);
+
+            //Assert
+            Assert.Null(country_response_from_get_method);
+        }
+
+
+        [Fact]
+        public void GetCountryByCountryID_ValidCountryID()
+        {
+            //Arrange
+            CountryAddRequest? country_Add_Request = new CountryAddRequest() { CountryName = "China" };
+            CountryResponse country_response_from_add = _countriesService.AddCountry(country_Add_Request);
+
+            //Act
+            CountryResponse? country_response_from_get = _countriesService.GetCountryByCountryID(country_response_from_add.CountryID);
+
+            //Assert
+            Assert.Equal(country_response_from_add, country_response_from_get);
+        }
+
+
+
+        #endregion
     }
 }
