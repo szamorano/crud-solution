@@ -42,9 +42,22 @@ namespace Services
             return _countries.Select(country => country.ToCountryResponse()).ToList();
         }
 
-        public CountryResponse? GetCountryByCountryID(Guid countryID)
+        public CountryResponse? GetCountryByCountryID(Guid? countryID)
         {
-            throw new NotImplementedException();
+            if (countryID == null)
+            {
+                return null;
+            }
+
+            Country? country_response_from_list = _countries.FirstOrDefault(country => country.CountryID == countryID);
+
+            if (country_response_from_list == null)
+            {
+                return null;
+            }
+
+            return country_response_from_list.ToCountryResponse();
+        
         }
     }
 }
