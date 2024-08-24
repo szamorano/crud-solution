@@ -14,11 +14,13 @@ namespace CRUDTests
     public class PersonsServiceTest
     {
         private readonly IPersonsService _personService;
+        private readonly ICountriesService _countriesService;
 
 
         public PersonsServiceTest()
         {
             _personService = new PersonsService();
+            _countriesService = new CountriesService();
         }
 
 
@@ -73,6 +75,48 @@ namespace CRUDTests
         }
 
 
+
+
+        #endregion
+
+
+
+        #region GetPersonByPersonID
+
+
+        [Fact]
+        public void GetPersonByPersonID_NullPersonID()
+        {
+            //Arrange
+            Guid? personID = null;
+
+            //Act
+            PersonResponse? person_response_from_get = _personService.GetPersonByPersonID(personID);
+
+            //Assert
+            Assert.Null(person_response_from_get);
+        }
+
+
+        [Fact]
+        public void GetPersonByPersonID_WithPersonID()
+        {
+            //Arrange
+            CountryAddRequest country_request = new CountryAddRequest() { CountryName = "Canada" };
+            CountryResponse country_response = _countriesService.AddCountry(country_request);
+
+            //Act
+            PersonAddRequest person_request = new PersonAddRequest() { PersonName = "person name...", Email = "email@example.com",
+                Address = "address", CountryID = country_response.CountryID,
+                DateOfBirth = DateTime.Parse("2000-01-01"), Gender = GenderOptions.Male, ReceiveNewsLetters = false };
+
+            PersonResponse person_response_from_add = _personService.AddPerson(person_request);
+
+            PersonResponse? person_response_from_get = _personService.GetPersonByPersonID(person_response_from_add.PersonID);
+            
+            //Assert
+            Assert.Equal(person_response_from_add, person_response_from_get);
+        }
 
 
         #endregion
