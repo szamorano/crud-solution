@@ -120,5 +120,92 @@ namespace CRUDTests
 
 
         #endregion
+
+
+
+        #region GetAllPersons
+
+
+        [Fact]
+        public void GetAllPersons_EmptyList()
+        {
+            //Act
+            List<PersonResponse> persons_from_get = _personService.GetAllPersons();
+
+            //Assert
+            Assert.Empty(persons_from_get);
+        }
+
+
+        [Fact]
+        public void GetAllPersons_AddFewPersons()
+        {
+            //Arrange
+            CountryAddRequest country_request1 = new CountryAddRequest() { CountryName = "USA" };
+            CountryAddRequest country_request2 = new CountryAddRequest() { CountryName = "India" };
+
+            var country_response1 = _countriesService.AddCountry(country_request1);
+            var country_response2 = _countriesService.AddCountry(country_request2);
+
+            PersonAddRequest person_request1 = new PersonAddRequest()
+            {
+                PersonName = "Smith",
+                Email = "user@example.com",
+                Gender = GenderOptions.Male,
+                Address = "smith address",
+                CountryID = country_response1.CountryID,
+                DateOfBirth = DateTime.Parse("2002-01-01"),
+                ReceiveNewsLetters = true
+            };
+
+            PersonAddRequest person_request2 = new PersonAddRequest()
+            {
+                PersonName = "Mary",
+                Email = "mary@example.com",
+                Gender = GenderOptions.Female,
+                Address = "mary address",
+                CountryID = country_response2.CountryID,
+                DateOfBirth = DateTime.Parse("2002-05-01"),
+                ReceiveNewsLetters = false
+            };
+
+            PersonAddRequest person_request3 = new PersonAddRequest()
+            {
+                PersonName = "Steve",
+                Email = "steve@example.com",
+                Gender = GenderOptions.Male,
+                Address = "steve address",
+                CountryID = country_response1.CountryID,
+                DateOfBirth = DateTime.Parse("2002-07-01"),
+                ReceiveNewsLetters = true
+            };
+
+            List<PersonResponse> person_response_list_from_add = new List<PersonResponse>();
+
+            List<PersonAddRequest> person_requests = new List<PersonAddRequest>()
+            { 
+                person_request1,
+                person_request2,
+                person_request3
+            };
+
+            foreach (PersonAddRequest request in person_requests)
+            {
+                var person_response = _personService.AddPerson(request);
+                person_response_list_from_add.Add(person_response);
+            }
+
+            //Act
+            List<PersonResponse> persons_list_from_get = _personService.GetAllPersons();
+
+            //Assert
+            foreach (PersonResponse person_response_from_add in person_response_list_from_add)
+            {
+                Assert.Contains(person_response_from_add, persons_list_from_get);
+            }
+        }
+
+
+        #endregion
     }
 }
