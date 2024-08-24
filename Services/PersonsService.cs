@@ -3,6 +3,7 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,9 +33,12 @@ namespace Services
         {
             if (personAddRequest == null) throw new ArgumentNullException(nameof(PersonAddRequest));
 
-            if (string.IsNullOrEmpty(personAddRequest.PersonName))
+            ValidationContext validationContext = new ValidationContext(personAddRequest);
+            List<ValidationResult> validationResults = new List<ValidationResult>();
+            bool isValid = Validator.TryValidateObject(personAddRequest, validationContext, validationResults, true);
+            if (!isValid)
             {
-                throw new ArgumentException("PersonName can't be empty");
+                throw new ArgumentException(validationResults.FirstOrDefault()?.ErrorMessage);
             }
 
             Person person = personAddRequest.ToPerson();
