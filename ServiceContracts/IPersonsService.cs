@@ -7,9 +7,9 @@ using ServiceContracts.DTO;
 
 namespace ServiceContracts
 {
-    public interface IPersonService
+    public interface IPersonsService
     {
-        PersonResponse AddPerson(PersonAddRequest personAddRequest);
+        PersonResponse AddPerson(PersonAddRequest? personAddRequest);
 
         List<PersonResponse> GetAllPersons();
     }
