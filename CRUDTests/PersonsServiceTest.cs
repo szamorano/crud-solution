@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using ServiceContracts.Enums;
+using Xunit.Abstractions;
 
 namespace CRUDTests
 {
@@ -15,12 +16,14 @@ namespace CRUDTests
     {
         private readonly IPersonsService _personService;
         private readonly ICountriesService _countriesService;
+        private readonly ITestOutputHelper _testOutputHelper;
 
 
-        public PersonsServiceTest()
+        public PersonsServiceTest(ITestOutputHelper testOutputHelper)
         {
             _personService = new PersonsService();
             _countriesService = new CountriesService();
+            _testOutputHelper = testOutputHelper;
         }
 
 
@@ -195,8 +198,21 @@ namespace CRUDTests
                 person_response_list_from_add.Add(person_response);
             }
 
+
+            _testOutputHelper.WriteLine("Expected");
+            foreach (PersonResponse person_response_from_add in person_response_list_from_add)
+            {
+                _testOutputHelper.WriteLine(person_response_from_add.ToString());
+            }
+
             //Act
             List<PersonResponse> persons_list_from_get = _personService.GetAllPersons();
+
+            _testOutputHelper.WriteLine("Actual");
+            foreach (PersonResponse person_response_from_get in persons_list_from_get)
+            {
+                _testOutputHelper.WriteLine(person_response_from_get.ToString());
+            }
 
             //Assert
             foreach (PersonResponse person_response_from_add in person_response_list_from_add)

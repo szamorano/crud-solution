@@ -37,7 +37,12 @@ namespace ServiceContracts.DTO
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return $"Person ID: {PersonID}, Person Name: {PersonName}, Email: {Email}, Date of Birth:{DateOfBirth?.ToString("MMM dd yyyy")}, Gender: {Gender}, Country ID: {CountryID}, Country: {Country}, Address: {Address}, Receive News Letters: {ReceiveNewsLetters}";
         }
     }
 
