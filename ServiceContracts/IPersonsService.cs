@@ -13,6 +13,6 @@ namespace ServiceContracts
 
         List<PersonResponse> GetAllPersons();
 
-        PersonResponse GetPersonByPersonID(Guid? personID);
+        PersonResponse? GetPersonByPersonID(Guid? personID);
     }
 }
