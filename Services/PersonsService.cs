@@ -1,6 +1,7 @@
 ﻿using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
+using Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -33,13 +34,7 @@ namespace Services
         {
             if (personAddRequest == null) throw new ArgumentNullException(nameof(PersonAddRequest));
 
-            ValidationContext validationContext = new ValidationContext(personAddRequest);
-            List<ValidationResult> validationResults = new List<ValidationResult>();
-            bool isValid = Validator.TryValidateObject(personAddRequest, validationContext, validationResults, true);
-            if (!isValid)
-            {
-                throw new ArgumentException(validationResults.FirstOrDefault()?.ErrorMessage);
-            }
+            ValidationHelper.ModelValidation(personAddRequest);
 
             Person person = personAddRequest.ToPerson();
             person.PersonID = Guid.NewGuid();
