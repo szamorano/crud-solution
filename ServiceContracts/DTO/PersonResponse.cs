@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entities;
+using ServiceContracts.Enums;
 
 namespace ServiceContracts.DTO
 {
@@ -42,7 +43,22 @@ namespace ServiceContracts.DTO
 
         public override string ToString()
         {
-            return $"Person ID: {PersonID}, Person Name: {PersonName}, Email: {Email}, Date of Birth:{DateOfBirth?.ToString("MMM dd yyyy")}, Gender: {Gender}, Country ID: {CountryID}, Country: {Country}, Address: {Address}, Receive News Letters: {ReceiveNewsLetters}";
+            return $"Person ID: {PersonID}, Person Name: {PersonName}, Email: {Email}, Date of Birth:{DateOfBirth?.ToString("MMM dd yyyy")}, Gender: {Gender}, Country ID: {CountryID}, Country: {Country}, Address: {Address}, Receive News Letters: {ReceiveNewsLetters}";return $"Person ID: {PersonID}, Person Name: {PersonName}, Email: {Email}, Date of Birth:{DateOfBirth?.ToString("MMM dd yyyy")}, Gender: {Gender}, Country ID: {CountryID}, Country: {Country}, Address: {Address}, Receive News Letters: {ReceiveNewsLetters}";
+        }
+
+        public PersonUpdateRequest ToPersonUpdateRequest()
+        {
+            return new PersonUpdateRequest()
+            {
+                PersonID = PersonID,
+                PersonName = PersonName,
+                Email = Email,
+                DateOfBirth = DateOfBirth,
+                Gender = (GenderOptions)Enum.Parse(typeof(GenderOptions), Gender, true),
+                Address = Address,
+                ReceiveNewsLetters = ReceiveNewsLetters,
+                CountryID = CountryID,
+            };
         }
     }
 
@@ -51,10 +67,18 @@ namespace ServiceContracts.DTO
     {
         public static PersonResponse ToPersonResponse(this Person person)
         {
-            return new PersonResponse() { PersonID = person.PersonID, PersonName = person.PersonName, Email = person.Email,
-                DateOfBirth = person.DateOfBirth, Gender = person.Gender, Address = person.Address,
-                ReceiveNewsLetters = person.ReceiveNewsLetters, CountryID = person.CountryID, 
-                Age = (person.DateOfBirth != null)? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null };
+            return new PersonResponse()
+            {
+                PersonID = person.PersonID,
+                PersonName = person.PersonName,
+                Email = person.Email,
+                DateOfBirth = person.DateOfBirth,
+                Gender = person.Gender,
+                Address = person.Address,
+                ReceiveNewsLetters = person.ReceiveNewsLetters,
+                CountryID = person.CountryID,
+                Age = (person.DateOfBirth != null) ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null
+            };
         }
     }
 }
