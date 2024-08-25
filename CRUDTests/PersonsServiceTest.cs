@@ -617,5 +617,72 @@ namespace CRUDTests
 
 
         #endregion
+
+
+
+
+
+        #region DeletePerson
+
+
+        [Fact]
+        public void DeletePerson_ValidPersonID()
+        {
+            //Arrange
+            CountryAddRequest country_add_request = new CountryAddRequest() { CountryName = "USA" };
+            var country_response_from_add = _countriesService.AddCountry(country_add_request);
+
+            PersonAddRequest person_add_request = new PersonAddRequest()
+            {
+                PersonName = "Jones",
+                Email = "user@example.com",
+                Gender = GenderOptions.Male,
+                Address = "jones address",
+                CountryID = country_response_from_add.CountryID,
+                DateOfBirth = DateTime.Parse("2002-01-01"),
+                ReceiveNewsLetters = true
+            };
+
+            PersonResponse person_response_from_add = _personService.AddPerson(person_add_request);
+
+            //Act
+            bool isDeleted = _personService.DeletePerson(person_response_from_add.PersonID);
+
+            //Assert
+            Assert.True(isDeleted);
+        }
+
+
+
+        [Fact]
+        public void DeletePerson_InvalidPersonID()
+        {
+            //Arrange
+            CountryAddRequest country_add_request = new CountryAddRequest() { CountryName = "USA" };
+            var country_response_from_add = _countriesService.AddCountry(country_add_request);
+
+            PersonAddRequest person_add_request = new PersonAddRequest()
+            {
+                PersonName = "Jones",
+                Email = "user@example.com",
+                Gender = GenderOptions.Male,
+                Address = "jones address",
+                CountryID = country_response_from_add.CountryID,
+                DateOfBirth = DateTime.Parse("2002-01-01"),
+                ReceiveNewsLetters = true
+            };
+
+            PersonResponse person_response_from_add = _personService.AddPerson(person_add_request);
+
+            //Act
+            bool isDeleted = _personService.DeletePerson(Guid.NewGuid());
+
+            //Assert
+            Assert.False(isDeleted);
+        }
+
+
+
+        #endregion
     }
 }
