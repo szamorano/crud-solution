@@ -19,5 +19,7 @@ namespace ServiceContracts
         List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString);
 
         List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder);
+
+        PersonResponse UpdatePerson(PersonUpdateRequest? personUpdateRequest);
     }
 }
