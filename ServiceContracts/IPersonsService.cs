@@ -22,6 +22,6 @@ namespace ServiceContracts
 
         PersonResponse UpdatePerson(PersonUpdateRequest? personUpdateRequest);
 
-        bool DeletePerson(Guid? PersonID);
+        bool DeletePerson(Guid? personID);
     }
 }
