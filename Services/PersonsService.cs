@@ -136,7 +136,7 @@ namespace Services
                 _persons.Add(new Person()
                 {
                     PersonID = Guid.Parse("66F68515-7331-4173-88F1-939CB2B5ADB5"),
-                    PersonName = "Ave",
+                    PersonName = "Bernard",
                     Email = "abernardini9@adobe.com",
                     DateOfBirth = DateTime.Parse("1998-01-28"),
                     Gender = "Male",
