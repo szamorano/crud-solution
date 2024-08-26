@@ -18,10 +18,133 @@ namespace Services
         private readonly List<Person> _persons;
         private readonly ICountriesService _countriesService;
 
-        public PersonsService()
+        public PersonsService(bool initialize = true)
         {
             _persons = new List<Person>();
             _countriesService = new CountriesService();
+
+            if (initialize)
+            {
+                _persons.Add(new Person() 
+                { 
+                    PersonID = Guid.Parse("0BC94089-6317-4E1C-BC70-21757338A705"),
+                    PersonName = "Felicity",
+                    Email = "fminty0@mlb.com",
+                    DateOfBirth = DateTime.Parse("1997-11-05"),
+                    Gender = "Female",
+                    Address = "41 Ronald Regan Pass",
+                    ReceiveNewsLetters = true,
+                    CountryID = Guid.Parse("C9751974-B47E-439B-914D-38DCFAF62964") 
+                });
+
+                _persons.Add(new Person()
+                {
+                    PersonID = Guid.Parse("4AEFDF1E-B3A0-4C52-A0B6-BB0DCD687E3E"),
+                    PersonName = "Kimmi",
+                    Email = "kschulke1@purevolume.com",
+                    DateOfBirth = DateTime.Parse("1995-03-30"),
+                    Gender = "Female",
+                    Address = "340 Del Sol Circle",
+                    ReceiveNewsLetters = false,
+                    CountryID = Guid.Parse("DF4783B2-57E1-4A27-992D-9BA95DE36A76")
+                });
+
+                _persons.Add(new Person()
+                {
+                    PersonID = Guid.Parse("50936198-E787-40C4-B75D-CE632DC18779"),
+                    PersonName = "Gisela",
+                    Email = "gnehl2@edublogs.org",
+                    DateOfBirth = DateTime.Parse("2000-02-18"),
+                    Gender = "Female",
+                    Address = "21 Lighthouse Bay Park",
+                    ReceiveNewsLetters = false,
+                    CountryID = Guid.Parse("3297A9F3-06AE-4191-ADAF-313CD19FF0EB")
+                });
+
+                _persons.Add(new Person()
+                {
+                    PersonID = Guid.Parse("DB9B429E-EA89-4067-8EBF-0C4CF6059964"),
+                    PersonName = "Nathan",
+                    Email = "nzoellner3@paypal.com",
+                    DateOfBirth = DateTime.Parse("1993-12-01"),
+                    Gender = "Male",
+                    Address = "954 Moose Park",
+                    ReceiveNewsLetters = true,
+                    CountryID = Guid.Parse("C9A67099-C44D-46A8-8761-5563FE224E06")
+                });
+
+                _persons.Add(new Person()
+                {
+                    PersonID = Guid.Parse("DD05AC95-88E0-46FD-845F-7C7A1EE15D21"),
+                    PersonName = "Madelina",
+                    Email = "mmacilhench4@ehow.com",
+                    DateOfBirth = DateTime.Parse("1995-05-16"),
+                    Gender = "Female",
+                    Address = "694 Cambridge Park",
+                    ReceiveNewsLetters = false,
+                    CountryID = Guid.Parse("53075EE2-E93D-482D-AD4A-C814AF21434B")
+                });
+
+                _persons.Add(new Person()
+                {
+                    PersonID = Guid.Parse("92AB4ECE-08AC-4D1B-9FA2-60185E8712DC"),
+                    PersonName = "Randolf",
+                    Email = "rskipsey5@washington.edu",
+                    DateOfBirth = DateTime.Parse("2000-01-04"),
+                    Gender = "Male",
+                    Address = "337 Daystar Crossing",
+                    ReceiveNewsLetters = false,
+                    CountryID = Guid.Parse("C9751974-B47E-439B-914D-38DCFAF62964")
+                });
+
+                _persons.Add(new Person()
+                {
+                    PersonID = Guid.Parse("B2F4D8AA-CC2B-40A2-99A3-8075A8C4B355"),
+                    PersonName = "Rickie",
+                    Email = "rcursons6@latimes.com",
+                    DateOfBirth = DateTime.Parse("1991-03-30"),
+                    Gender = "Male",
+                    Address = "70346 Ohio Park",
+                    ReceiveNewsLetters = false,
+                    CountryID = Guid.Parse("DF4783B2-57E1-4A27-992D-9BA95DE36A76")
+                });
+
+                _persons.Add(new Person()
+                {
+                    PersonID = Guid.Parse("50F6F5EB-1214-4ED9-B4AC-E6B4650344B6"),
+                    PersonName = "Marcelle",
+                    Email = "msowrey7@go.com",
+                    DateOfBirth = DateTime.Parse("1992-06-10"),
+                    Gender = "Female",
+                    Address = "33124 Ohio Circle",
+                    ReceiveNewsLetters = true,
+                    CountryID = Guid.Parse("3297A9F3-06AE-4191-ADAF-313CD19FF0EB")
+                });
+
+                _persons.Add(new Person()
+                {
+                    PersonID = Guid.Parse("12C851FF-9CCB-4AF5-B138-1721BB0B35A7"),
+                    PersonName = "Cecile",
+                    Email = "cmose8@tuttocitta.it",
+                    DateOfBirth = DateTime.Parse("1992-04-21"),
+                    Gender = "Female",
+                    Address = "796 Di Loreto Drive",
+                    ReceiveNewsLetters = true,
+                    CountryID = Guid.Parse("C9A67099-C44D-46A8-8761-5563FE224E06")
+                });
+
+                _persons.Add(new Person()
+                {
+                    PersonID = Guid.Parse("66F68515-7331-4173-88F1-939CB2B5ADB5"),
+                    PersonName = "Ave",
+                    Email = "abernardini9@adobe.com",
+                    DateOfBirth = DateTime.Parse("1998-01-28"),
+                    Gender = "Male",
+                    Address = "5152 Barby Junction",
+                    ReceiveNewsLetters = true,
+                    CountryID = Guid.Parse("53075EE2-E93D-482D-AD4A-C814AF21434B")
+                });
+            }
         }
 
         private PersonResponse ConvertPersonToPersonResponse(Person person)
@@ -64,12 +187,12 @@ namespace Services
             List<PersonResponse> allPersons = GetAllPersons();
             List<PersonResponse> matchingPersons = allPersons;
 
-            if(string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString)) return matchingPersons;
+            if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString)) return matchingPersons;
 
-            switch (searchBy) 
+            switch (searchBy)
             {
                 case nameof(Person.PersonName):
-                    matchingPersons = allPersons.Where(p => (!string.IsNullOrEmpty(p.PersonName)? p.PersonName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
+                    matchingPersons = allPersons.Where(p => (!string.IsNullOrEmpty(p.PersonName) ? p.PersonName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
                     break;
                 case nameof(Person.Email):
                     matchingPersons = allPersons.Where(p => (!string.IsNullOrEmpty(p.Email) ? p.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
