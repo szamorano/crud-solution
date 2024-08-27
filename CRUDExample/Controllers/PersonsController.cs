@@ -53,5 +53,23 @@ namespace CRUDExample.Controllers
 
             return View();
         }
+
+
+        [HttpPost]
+        [Route("persons/create")]
+        public IActionResult Create(PersonAddRequest personAddRequest)
+        {
+            if (!ModelState.IsValid) 
+            {
+                List<CountryResponse> countries = _countriesService.GetAllCountries();
+                ViewBag.Countries = countries;
+
+                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return View();
+            }
+
+            PersonResponse personResponse = _personsService.AddPerson(personAddRequest);
+            return RedirectToAction("Index", "Persons");
+        }
     }
 }
