@@ -9,6 +9,11 @@ namespace Entities
 {
     public class PersonsDbContext : DbContext
     {
+        public PersonsDbContext(DbContextOptions options) : base(options)
+        {
+            
+        }
+
         public DbSet<Country> Countries { get; set; }
         public DbSet<Person> Persons { get; set; }
 
@@ -27,7 +32,7 @@ namespace Entities
 
             foreach(Country country in countries)
             {
-                modelBuilder.Entity<Country>().HasData(new Country() { CountryID = Guid.NewGuid(), CountryName = "Sample" });
+                modelBuilder.Entity<Country>().HasData(country);
             }
 
 
