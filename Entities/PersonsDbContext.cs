@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Entities
     {
         public PersonsDbContext(DbContextOptions options) : base(options)
         {
-            
+
         }
 
         public DbSet<Country> Countries { get; set; }
@@ -30,7 +31,7 @@ namespace Entities
             string countriesJson = System.IO.File.ReadAllText("countries.json");
             List<Country> countries = System.Text.Json.JsonSerializer.Deserialize<List<Country>>(countriesJson);
 
-            foreach(Country country in countries)
+            foreach (Country country in countries)
             {
                 modelBuilder.Entity<Country>().HasData(country);
             }
@@ -49,6 +50,23 @@ namespace Entities
         public List<Person> sp_GetAllPersons()
         {
             return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
+        }
+
+        public int sp_InsertPerson(Person person)
+        {
+            SqlParameter[] parameters = new SqlParameter[] 
+            { 
+                new SqlParameter("@PersonID", person.PersonID),
+                new SqlParameter("@PersonName", person.PersonName),
+                new SqlParameter("@Email", person.Email),
+                new SqlParameter("@DateOfBirth", person.DateOfBirth),
+                new SqlParameter("@Gender", person.Gender),
+                new SqlParameter("@CountryID", person.CountryID),
+                new SqlParameter("@Address", person.Address),
+                new SqlParameter("@ReceiveNewsLetters", person.ReceiveNewsLetters),
+            };
+
+            return Database.ExecuteSqlRaw("Execute [dbo].[InsertPerson] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters", parameters);
         }
     }
 }
