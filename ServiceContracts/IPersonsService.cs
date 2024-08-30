@@ -23,5 +23,7 @@ namespace ServiceContracts
         Task<PersonResponse> UpdatePerson(PersonUpdateRequest? personUpdateRequest);
 
         Task<bool> DeletePerson(Guid? personID);
+
+        Task<MemoryStream> GetPersonsCSV();
     }
 }
