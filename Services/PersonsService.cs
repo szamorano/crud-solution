@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -24,12 +25,7 @@ namespace Services
             _countriesService = countriesService;
         }
 
-        private PersonResponse ConvertPersonToPersonResponse(Person person)
-        {
-            PersonResponse personResponse = person.ToPersonResponse();
-            personResponse.Country = _countriesService.GetCountryByCountryID(person.CountryID)?.CountryName;
-            return personResponse;
-        }
+        
 
         public PersonResponse AddPerson(PersonAddRequest? personAddRequest)
         {
@@ -44,12 +40,14 @@ namespace Services
 
             //_db.sp_InsertPerson(person);
 
-            return ConvertPersonToPersonResponse(person);
+            return person.ToPersonResponse();
         }
 
         public List<PersonResponse> GetAllPersons()
         {
-            return _db.Persons.ToList().Select(p => ConvertPersonToPersonResponse(p)).ToList();
+            var persons = _db.Persons.Include("Country").ToList();
+
+            return persons.Select(p => p.ToPersonResponse()).ToList();
 
 
             //return _db.sp_GetAllPersons().Select(p => ConvertPersonToPersonResponse(p)).ToList();
@@ -59,10 +57,10 @@ namespace Services
         {
             if (personID == null) return null;
 
-            var person = _db.Persons.FirstOrDefault(p => p.PersonID == personID);
+            var person = _db.Persons.Include("Country").FirstOrDefault(p => p.PersonID == personID);
             if (person == null) return null;
 
-            return ConvertPersonToPersonResponse(person);
+            return person.ToPersonResponse();
         }
 
         public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
@@ -147,7 +145,7 @@ namespace Services
 
             _db.SaveChanges();
 
-            return ConvertPersonToPersonResponse(matchingPerson);
+            return matchingPerson.ToPersonResponse();
         }
 
         public bool DeletePerson(Guid? personID)
