@@ -48,10 +48,15 @@ namespace Entities
 
 
             //Fluent API
-            modelBuilder.Entity<Person>().Property(temp => temp.TIN)
+            modelBuilder.Entity<Person>().Property(p => p.TIN)
                 .HasColumnName("TaxIdentificationNumber")
                 .HasColumnType("varchar(8)")
                 .HasDefaultValue("ABC12345");
+
+
+            //modelBuilder.Entity<Person>().HasIndex(p => p.TIN).IsUnique();
+
+            modelBuilder.Entity<Person>().HasCheckConstraint("CHK_TIN", "len([TaxIdentificationNumber]) = 8");
         }
 
         public List<Person> sp_GetAllPersons()
