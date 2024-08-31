@@ -25,5 +25,7 @@ namespace ServiceContracts
         Task<bool> DeletePerson(Guid? personID);
 
         Task<MemoryStream> GetPersonsCSV();
+
+        Task<MemoryStream> GetPersonsExcel();
     }
 }
