@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using EntityFrameworkCoreMock;
 using AutoFixture;
 using AutoFixture.Kernel;
+using FluentAssertions;
 
 namespace CRUDTests
 {
@@ -54,12 +55,14 @@ namespace CRUDTests
             //Arrange
             PersonAddRequest? personAddRequest = null;
 
-            //Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async() =>
+            //Act
+            Func<Task> action = async() =>
             {
-                //Act
                 await _personService.AddPerson(personAddRequest);
-            });
+            };
+            //Assert
+            await action.Should().ThrowAsync<ArgumentNullException>();
+            //await Assert.ThrowsAsync<ArgumentNullException>;
         }
 
 
@@ -71,11 +74,13 @@ namespace CRUDTests
             //PersonAddRequest? personAddRequest = new PersonAddRequest() { PersonName = null };
 
             //Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
+            Func<Task> action = async () =>
             {
                 //Act
                 await _personService.AddPerson(personAddRequest);
-            });
+            };
+            await action.Should().ThrowAsync<ArgumentNullException>();
+            //await Assert.ThrowsAsync<ArgumentException>(
         }
 
 
@@ -101,8 +106,11 @@ namespace CRUDTests
             List<PersonResponse> persons_list = await _personService.GetAllPersons();
 
             //Assert
-            Assert.True(person_response_from_add.PersonID != Guid.Empty);
-            Assert.Contains(person_response_from_add, persons_list);
+            //Assert.True(person_response_from_add.PersonID != Guid.Empty);
+            person_response_from_add.PersonID.Should().NotBe(Guid.Empty);
+
+            //Assert.Contains(person_response_from_add, persons_list);
+            persons_list.Should().Contain(person_response_from_add);
         }
 
 
@@ -125,7 +133,8 @@ namespace CRUDTests
             PersonResponse? person_response_from_get = await _personService.GetPersonByPersonID(personID);
 
             //Assert
-            Assert.Null(person_response_from_get);
+            //Assert.Null(person_response_from_get);
+            person_response_from_get.Should().BeNull();
         }
 
 
@@ -146,7 +155,8 @@ namespace CRUDTests
             PersonResponse? person_response_from_get = await _personService.GetPersonByPersonID(person_response_from_add.PersonID);
 
             //Assert
-            Assert.Equal(person_response_from_add, person_response_from_get);
+            //Assert.Equal(person_response_from_add, person_response_from_get);
+            person_response_from_get.Should().Be(person_response_from_add);
         }
 
 
@@ -164,7 +174,8 @@ namespace CRUDTests
             List<PersonResponse> persons_from_get = await _personService.GetAllPersons();
 
             //Assert
-            Assert.Empty(persons_from_get);
+            //Assert.Empty(persons_from_get);
+            persons_from_get.Should().BeEmpty();
         }
 
 
@@ -216,10 +227,12 @@ namespace CRUDTests
             }
 
             //Assert
-            foreach (PersonResponse person_response_from_add in person_response_list_from_add)
-            {
-                Assert.Contains(person_response_from_add, persons_list_from_get);
-            }
+            //foreach (PersonResponse person_response_from_add in person_response_list_from_add)
+            //{
+            //    Assert.Contains(person_response_from_add, persons_list_from_get);
+            //}
+
+            persons_list_from_get.Should().BeEquivalentTo(person_response_list_from_add);
         }
 
 
