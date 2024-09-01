@@ -12,6 +12,8 @@ using Xunit.Abstractions;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using EntityFrameworkCoreMock;
+using AutoFixture;
+using AutoFixture.Kernel;
 
 namespace CRUDTests
 {
@@ -20,10 +22,13 @@ namespace CRUDTests
         private readonly IPersonsService _personService;
         private readonly ICountriesService _countriesService;
         private readonly ITestOutputHelper _testOutputHelper;
+        private readonly IFixture _fixture;
 
 
         public PersonsServiceTest(ITestOutputHelper testOutputHelper)
         {
+            _fixture = new Fixture();
+
             var countriesInitialData = new List<Country>() { };
             var personsInitialData = new List<Person>() { };
 
@@ -77,16 +82,18 @@ namespace CRUDTests
         public async Task AddPerson_PersonProperDetails()
         {
             //Arrange
-            PersonAddRequest? personAddRequest = new PersonAddRequest()
-            {
-                PersonName = "Person name...",
-                Email = "person@example.com",
-                Address = "sample address",
-                CountryID = Guid.NewGuid(),
-                Gender = GenderOptions.Male,
-                DateOfBirth = DateTime.Parse("2000-01-01"),
-                ReceiveNewsLetters = true
-            };
+            PersonAddRequest? personAddRequest = _fixture.Build<PersonAddRequest>().With(temp => temp.Email, "user@example.com").Create();
+
+            //PersonAddRequest? personAddRequest = new PersonAddRequest()
+            //{
+            //    PersonName = "Person name...",
+            //    Email = "person@example.com",
+            //    Address = "sample address",
+            //    CountryID = Guid.NewGuid(),
+            //    Gender = GenderOptions.Male,
+            //    DateOfBirth = DateTime.Parse("2000-01-01"),
+            //    ReceiveNewsLetters = true
+            //};
 
             //Act
             PersonResponse person_response_from_add = await _personService.AddPerson(personAddRequest);
