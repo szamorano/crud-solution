@@ -5,9 +5,16 @@ using Entities;
 using RepositoryContracts;
 using Repositories;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, LoggerConfiguration loggerConfiguration) =>
+{
+    loggerConfiguration.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services);
+});
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
