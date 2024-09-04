@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using RepositoryContracts;
 using Serilog;
+using SerilogTimings;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -77,24 +78,29 @@ namespace Services
         public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString)
         {
             _logger.LogInformation("GetFilteredPersons of PersonsService");
-            List<Person> persons = searchBy switch
+
+            List<Person> persons;
+
+            using (Operation.Time("Time for Filtered Persons from database"))
             {
-                nameof(PersonResponse.PersonName) =>
-                    await _personsRepository.GetFilteredPersons(p => p.PersonName.Contains(searchString)),
-                nameof(PersonResponse.Email) =>
-                    await _personsRepository.GetFilteredPersons(p => p.Email.Contains(searchString)),
-                nameof(PersonResponse.DateOfBirth) =>
-                    await _personsRepository.GetFilteredPersons(p => p.DateOfBirth.Value.ToString("MMM d yyyy").Contains(searchString)),
-                nameof(PersonResponse.Gender) =>
-                    await _personsRepository.GetFilteredPersons(p => p.Gender.Contains(searchString)),
-                nameof(PersonResponse.CountryID) =>
-                    await _personsRepository.GetFilteredPersons(p => p.Country.CountryName.Contains(searchString)),
-                nameof(PersonResponse.Address) =>
-                    await _personsRepository.GetFilteredPersons(p => p.Address.Contains(searchString)),
+                persons = searchBy switch
+                {
+                    nameof(PersonResponse.PersonName) =>
+                        await _personsRepository.GetFilteredPersons(p => p.PersonName.Contains(searchString)),
+                    nameof(PersonResponse.Email) =>
+                        await _personsRepository.GetFilteredPersons(p => p.Email.Contains(searchString)),
+                    nameof(PersonResponse.DateOfBirth) =>
+                        await _personsRepository.GetFilteredPersons(p => p.DateOfBirth.Value.ToString("MMM d yyyy").Contains(searchString)),
+                    nameof(PersonResponse.Gender) =>
+                        await _personsRepository.GetFilteredPersons(p => p.Gender.Contains(searchString)),
+                    nameof(PersonResponse.CountryID) =>
+                        await _personsRepository.GetFilteredPersons(p => p.Country.CountryName.Contains(searchString)),
+                    nameof(PersonResponse.Address) =>
+                        await _personsRepository.GetFilteredPersons(p => p.Address.Contains(searchString)),
 
-                _ => await _personsRepository.GetAllPersons()
-            };
-
+                    _ => await _personsRepository.GetAllPersons()
+                };
+            }
             _diagnosticContext.Set("Persons", persons);
 
             return persons.Select(p => p.ToPersonResponse()).ToList();
