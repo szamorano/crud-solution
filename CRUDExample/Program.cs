@@ -6,6 +6,7 @@ using RepositoryContracts;
 using Repositories;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using CRUDExample.Filters.ActionFilters;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,17 @@ builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, 
     loggerConfiguration.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services);
 });
 
-builder.Services.AddControllersWithViews();
+
+
+builder.Services.AddControllersWithViews(options => {
+    //options.Filters.Add<ResponseHeaderActionFilter>();
+
+    var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
+
+    options.Filters.Add(new ResponseHeaderActionFilter(logger, "My-Key-From-Global", "My-Value-From-Global"));
+});
+
+
 
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 builder.Services.AddScoped<IPersonsRepository, PersonsRepository>();
